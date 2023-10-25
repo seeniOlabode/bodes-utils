@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="app-buttons">
+        <button id="undo">Undo</button>
+        <button id="redo">Redo</button>
+      </div>
+      <form class="app-form">
+        <input id="first-name" type="Text" placeholder="First Name" />
+        <input id="last-name" type="Text" placeholder="Last Name" />
+        <input id="email" type="Text" placeholder="Email" />
+        <div class="color-div">
+          <span>Color: &nbsp;</span> <input id="color" type="color" />
+        </div>
+      </form>
+      <ul class="results">
+        <li>First Name: &nbsp; <span class="result-cont"></span></li>
+        <li>Last Name: &nbsp; <span class="result-cont"></span></li>
+        <li>Email: &nbsp; <span class="result-cont"></span></li>
+        <li>Color: &nbsp; <span class="result-cont"></span></li>
+      </ul>
+    </div>
+    <script src="./index.js"></script>
+    <script>
+      const select = (e) => document.querySelector(e);
+
+      const firstName = select("#first-name");
+      const lastName = select("#last-name");
+      const email = select("#email");
+      const color = select("#color");
+
+      const undoEl = select("button#undo");
+      const redoEl = select("button#redo");
+
+      const inputs = [firstName, lastName, email, color];
+
+      const keys = ["firstName", "lastName", "email", "color"];
+      const data = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        color: "",
+      };
+
+      const myBrowser = new Browser(data, (data) => {
+        inputs.forEach((el, i) => {
+          el.value = data[keys[i]];
+        });
+      });
+
+      inputs.forEach((el, i) => {
+        const resultBox = select(
+          `.results li:nth-child(${i + 1}) .result-cont`
+        );
+        el.addEventListener("input", (e) => {
+          resultBox.textContent = e.target.value;
+          myBrowser.setData(keys[i], e.target.value);
+        });
+      });
+
+      undoEl.addEventListener("click", () => {
+        myBrowser.undo();
+      });
+      redoEl.addEventListener("click", () => {
+        myBrowser.redo();
+      });
+    </script>
+  </body>
+
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app-buttons {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 50px;
+    }
+
+    .app-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    input {
+      font-size: 20px;
+    }
+
+    .color-div {
+      display: flex;
+      gap: 50px;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</html>
